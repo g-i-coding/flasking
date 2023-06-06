@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: celzey-flaskcontainer
+  name: celzeyflask
   namespace: celzey9
   labels:
-    app: celzey-flaskcontainer
+    app: celzeyflask
 spec:
   selector:
     matchLabels:
-      app: celzey-flaskcontainer
+      app: celzeyflask
   replicas: 1
   strategy:
     rollingUpdate:
@@ -18,10 +18,10 @@ spec:
   template:
     metadata:
       labels:
-        app: celzey-flaskcontainer
+        app: celzeyflask
     spec:
       containers:
-        - name: celzey-flaskcontainer
+        - name: celzeyflask
           image: celzey9/flask_app_new
           resources:
             requests:
@@ -32,7 +32,7 @@ spec:
               memory: 100Mi
           ports:
             - containerPort: 5000
-              name: celzey-flaskcontainer
+              name: celzeyflask
           imagePullPolicy: Always
       restartPolicy: Always
 
@@ -40,18 +40,18 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: celzey-flaskcontainer
+  name: celzeyflask
   namespace: celzey9
 spec:
   selector:
-    app: celzey-flaskcontainer
+    app: celzeyflask
   type: LoadBalancer
   sessionAffinity: None
   sessionAffinityConfig:
     clientIP:
       timeoutSeconds: 10800
   ports:
-    - name: celzey-flaskcontainer
+    - name: celzeyflask
       protocol: TCP
       port: 80
       targetPort: 5000

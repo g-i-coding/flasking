@@ -1,4 +1,11 @@
 pipeline {
+
+  enivronment {
+    registry = "celzey9/flask_app_new"
+    registryCredentials = "docker"
+    cluster_name = "skillstorm"
+
+  }
   agent {
     node {
       label 'docker'
@@ -12,21 +19,21 @@ pipeline {
       }
     }
 
-    stage('Build') {
+    stage('Build Stage') {
       steps {
-        sh 'docker build -t celzey9/flask_app_new .'
+        script {
+          dockerImage - docker.build(registry)
+        }
       }
     }
 
-    stage('Docker login') {
+    stage('Deployment Stage') {
       steps {
-        sh 'docker login -u celzey9 -p dckr_pat_tTA4FjEiYhs1LUgGN107sYYKnBI'
-      }
-    }
-
-    stage('Docker Push') {
-      steps {
-        sh 'docker push celzey9/flask_app_new'
+        script {
+          docker.withRegistry('', registryCredentials) {
+            dockerImage.push()
+          }
+        }
       }
     }
 
